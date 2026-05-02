@@ -1,3 +1,6 @@
+/* Universal box-sizing — prevents elements overflowing their containers on narrow screens */
+*, *::before, *::after { box-sizing: border-box; }
+
 :root {
   font-family: "Poppins", system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

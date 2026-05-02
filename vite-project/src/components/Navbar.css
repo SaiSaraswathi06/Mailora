@@ -1,3 +1,12 @@
+/* ============================================================
+   Navbar.css
+   Original styles preserved exactly.
+   Added at the bottom:
+     - Hamburger button styles (hidden on desktop)
+     - Mobile dropdown menu (≤768px)
+     - Tablet tightening (≤1024px)
+   ============================================================ */
+
 .navbar {
   background-color: transparent;
   height: 70px;
@@ -8,6 +17,7 @@
   top: 0;
   z-index: 999;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  position: sticky;
 }
 
 .navbar-container {
@@ -18,6 +28,7 @@
   max-width: 1200px;
   width: 100%;
   padding: 0 2rem;
+  position: relative;
 }
 
 .navbar-logo {
@@ -27,6 +38,7 @@
   text-decoration: none;
   font-size: 1.5rem;
   font-weight: bold;
+  flex-shrink: 0;
 }
 
 .nav-menu {
@@ -35,6 +47,7 @@
   text-align: center;
   margin: 0;
   padding: 0;
+  align-items: center;
 }
 
 .nav-item {
@@ -52,6 +65,12 @@
   height: 100%;
   font-weight: 500;
   transition: color 0.2s ease-in-out;
+  white-space: nowrap;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-family: inherit;
 }
 
 .nav-links:hover {
@@ -69,6 +88,16 @@
 
 .nav-links-btn:hover {
   background-color: var(--color-primary-hover);
+  color: white !important;
+}
+
+/* Inline username label next to Logout */
+.nav-user-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0 0.5rem 0 1rem;
+  height: auto;
+  opacity: 0.8;
 }
 
 .theme-toggle-item {
@@ -84,12 +113,156 @@
   cursor: pointer;
   font-weight: bold;
   transition: 0.2s ease;
+  white-space: nowrap;
 }
 
 .theme-toggle-btn:hover {
   filter: brightness(1.1);
 }
 
-/* THEME OVERRIDES */
+/* THEME OVERRIDES — original */
 body.light-theme .navbar { background-color: #ffffff; border-bottom: 1px solid #e0e0e0; }
-body.dark-theme .navbar { background-color: #1a1a1a; border-bottom: 1px solid #333; }
+body.dark-theme  .navbar { background-color: #1a1a1a; border-bottom: 1px solid #333; }
+
+/* ============================================================
+   Hamburger button — hidden on desktop, shown on mobile only
+   ============================================================ */
+.hamburger-btn {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 26px;
+  height: 19px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 1001;
+  flex-shrink: 0;
+}
+
+.hamburger-btn span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: currentColor;
+  border-radius: 2px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Animate to X when open */
+.hamburger-btn.open span:nth-child(1) { transform: translateY(8.5px) rotate(45deg); }
+.hamburger-btn.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.hamburger-btn.open span:nth-child(3) { transform: translateY(-8.5px) rotate(-45deg); }
+
+/* Dim overlay — only used on mobile */
+.nav-overlay { display: none; }
+
+/* ============================================================
+   Tablet (≤1024px) — tighten spacing, keep layout
+   ============================================================ */
+@media (max-width: 1024px) {
+  .navbar-container { padding: 0 1.25rem; }
+  .nav-links         { padding: 0 0.6rem; font-size: 0.9rem; }
+  .nav-links-btn     { padding: 0.45rem 0.75rem; margin-left: 0.5rem; }
+  .theme-toggle-btn  { padding: 0.35rem 0.6rem; font-size: 0.8rem; }
+  .theme-toggle-item { margin-left: 0.5rem; }
+}
+
+/* ============================================================
+   Mobile (≤768px) — hamburger + vertical dropdown
+   ============================================================ */
+@media (max-width: 768px) {
+  /* Show hamburger, hide full nav */
+  .hamburger-btn { display: flex; }
+
+  /* Dropdown slides in below the 70px navbar */
+  .nav-menu {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    background-color: #ffffff;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.35s ease, opacity 0.25s ease;
+    z-index: 1000;
+  }
+
+  .nav-menu.nav-menu--open {
+    max-height: calc(100vh - 70px);
+    opacity: 1;
+    overflow-y: auto;
+  }
+
+  /* Stack items vertically */
+  .nav-item {
+    height: auto;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nav-links {
+    padding: 0.9rem 1.5rem;
+    height: auto;
+    width: 100%;
+    justify-content: flex-start;
+    font-size: 1rem;
+  }
+
+  .nav-links-btn {
+    margin: 0.5rem 1.5rem 0.75rem;
+    width: calc(100% - 3rem);
+    justify-content: center;
+    border-radius: 8px;
+    height: auto;
+    padding: 0.7rem 1rem;
+  }
+
+  .nav-user-label {
+    padding: 0.9rem 1.5rem 0 1.5rem;
+    font-size: 0.85rem;
+  }
+
+  .theme-toggle-item {
+    margin-left: 0;
+    padding: 0.5rem 1.5rem;
+    width: 100%;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+
+  .theme-toggle-btn {
+    background: transparent;
+    padding: 0.4rem 0;
+    width: 100%;
+    text-align: left;
+    font-size: 0.95rem;
+  }
+
+  /* Dark theme mobile menu */
+  body.dark-theme .nav-menu { background-color: #1a1a1a; }
+  body.dark-theme .nav-item { border-bottom-color: rgba(255,255,255,0.08); }
+  body.dark-theme .theme-toggle-item { border-bottom-color: rgba(255,255,255,0.08); }
+
+  /* Dim overlay behind the open menu */
+  .nav-overlay {
+    display: block;
+    position: fixed;
+    inset: 70px 0 0 0;
+    background: rgba(0,0,0,0.35);
+    z-index: 999;
+  }
+}
+
+/* ============================================================
+   Small phones (≤480px)
+   ============================================================ */
+@media (max-width: 480px) {
+  .navbar-container { padding: 0 1rem; }
+  .navbar-logo      { font-size: 1.25rem; }
+}

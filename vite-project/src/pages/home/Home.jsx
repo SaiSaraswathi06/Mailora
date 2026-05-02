@@ -74,7 +74,6 @@ const Home = () => {
   return (
     <div className="home-container">
 
-
       <main>
         {/* Hero */}
         <section className="ca-hero">

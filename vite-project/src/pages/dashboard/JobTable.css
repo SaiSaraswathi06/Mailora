@@ -1,9 +1,7 @@
-body {
-  background: #0f0f0f;
+/* Previously this was `body {}` which overrode the entire theme system.
+   Scoped to .jobtable-page so only the Jobs page is affected. */
+.jobtable-page {
   font-family: Arial, Helvetica, sans-serif;
-  margin: 0;
-  padding: 0;
-  color: white;
 }
 
 /* container */

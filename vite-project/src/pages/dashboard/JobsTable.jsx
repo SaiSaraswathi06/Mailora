@@ -59,6 +59,7 @@ function JobsTable() {
   };
 
   return (
+    <div className="jobtable-page">
     <div className="container">
 
       <h2>Available Jobs</h2>
@@ -153,6 +154,7 @@ function JobsTable() {
         <button onClick={goToPage}>▶</button>
       </div>
 
+    </div>
     </div>
   );
 }

@@ -219,7 +219,7 @@ body.dark-theme .auth-footer-text { color: var(--color-text-muted-dark); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Mobile Responsiveness */
+/* Mobile Responsiveness — 480px */
 @media (max-width: 480px) {
   .auth-card {
     padding: 30px 20px;
@@ -233,4 +233,11 @@ body.dark-theme .auth-footer-text { color: var(--color-text-muted-dark); }
   }
 }
 
-
+/* Very small phones — 360px */
+@media (max-width: 360px) {
+  .auth-card       { padding: 24px 14px; margin: 10px; }
+  .auth-title      { font-size: 22px; }
+  .auth-input      { padding: 11px 12px; font-size: 14px; }
+  .auth-btn-primary { padding: 12px; font-size: 14px; }
+  .social-btn      { font-size: 13px; padding: 10px; }
+}

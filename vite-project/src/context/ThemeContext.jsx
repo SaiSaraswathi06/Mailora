@@ -1,12 +1,23 @@
+/**
+ * ThemeContext.jsx
+ * Provides global dark/light theme state with localStorage persistence.
+ * The toggle is already wired to the Navbar via useTheme().
+ * Adding localStorage so the chosen theme survives page refresh.
+ */
 import { createContext, useState, useEffect, useContext } from 'react';
 
 const ThemeContext = createContext();
 
+const THEME_KEY = 'mailora-theme'; // localStorage key
+
 export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState('light');
+  // Read saved theme on mount; default to 'light' if nothing stored
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem(THEME_KEY) || 'light';
+  });
 
   useEffect(() => {
-    // Apply theme to the document body to avoid rewriting team's logic locally
+    // Apply theme class to <body> (used by existing CSS overrides throughout the app)
     if (theme === 'dark') {
       document.body.classList.add('dark-theme');
       document.documentElement.classList.add('dark');
@@ -16,10 +27,12 @@ export const ThemeProvider = ({ children }) => {
       document.body.classList.remove('dark-theme');
       document.documentElement.classList.remove('dark');
     }
+    // Persist choice so it survives page refresh
+    localStorage.setItem(THEME_KEY, theme);
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
   };
 
   return (

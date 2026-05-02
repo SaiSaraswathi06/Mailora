@@ -1,9 +1,12 @@
 import { useState, useRef, useEffect } from "react";
 import { IoNotificationsOutline } from "react-icons/io5";
 import { FaUserCircle } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext"; // [NEW] global auth
 
 export default function Topbar() {
+  const { logout } = useAuth(); // [NEW]
+  const navigate   = useNavigate(); // [NEW]
 
   const [openNotifications, setOpenNotifications] = useState(false);
   const [openProfile, setOpenProfile] = useState(false);
@@ -85,7 +88,7 @@ export default function Topbar() {
           )}
 
         </div>
-        
+
 
 
         {/* 👤 Profile */}
@@ -112,7 +115,11 @@ export default function Topbar() {
                   </Link>
                 </li>
 
-                <li className="px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-gray-900 cursor-pointer text-red-500 dark:text-red-400 transition-colors border-t border-slate-50 dark:border-gray-800">
+                {/* [NEW] Logout wired to AuthContext — clears session and redirects */}
+                <li
+                  className="px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-gray-900 cursor-pointer text-red-500 dark:text-red-400 transition-colors border-t border-slate-50 dark:border-gray-800"
+                  onClick={() => { setOpenProfile(false); logout(); navigate('/login'); }}
+                >
                   Logout
                 </li>
 

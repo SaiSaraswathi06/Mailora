@@ -1,27 +1,34 @@
+/**
+ * Login.jsx — original design unchanged.
+ * Added: useAuth().login() called after successful API response
+ * so global auth state is updated and Navbar reflects login status.
+ */
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FaEye, FaEyeSlash, FaMicrosoft, FaEnvelope } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-// import ForgotPassword from "./ForgotPassword";
 import axiosClient from "../../helpers/axiosClient";
+import { useAuth } from "../../context/AuthContext"; // [NEW] global auth
 import "../../styles/auth.css";
 
 const Login = () => {
   const [identifier, setIdentifier] = useState("");
-  const [password, setPassword] = useState("");
+  const [password, setPassword]     = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const [errors, setErrors] = useState({});
-  const navigate = useNavigate();
+  const [errors, setErrors]         = useState({});
+
+  const navigate  = useNavigate();
+  const location  = useLocation();
+  const { login } = useAuth(); // [NEW]
+
+  // Redirect back to the page the user originally tried to visit
+  const from = location.state?.from?.pathname || "/dashboard";
 
   const validate = () => {
     let newErrors = {};
-    if (!identifier) {
-      newErrors.identifier = "Username or Email is required";
-    }
-    if (!password) {
-      newErrors.password = "Password is required";
-    }
+    if (!identifier) newErrors.identifier = "Username or Email is required";
+    if (!password)   newErrors.password   = "Password is required";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -29,15 +36,19 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
-    
+
     try {
       const res = await axiosClient.post("/api/auth/login", {
         email: identifier,
-        password
+        password,
       });
-      console.log(res);
-      alert("Login successful");
-      navigate("/dashboard");
+
+      // [NEW] Store user globally in AuthContext + localStorage
+      const userData  = res.data?.user  || res.data || {};
+      const authToken = res.data?.token || null;
+      login(userData, authToken);
+
+      navigate(from, { replace: true });
     } catch (err) {
       if (err.response) {
         setErrors({ server: err.response.data.message });
@@ -109,7 +120,7 @@ const Login = () => {
           <button type="submit" className="auth-btn-primary">
             Login
           </button>
-          
+
           {errors.server && (
             <span className="error-text" style={{ textAlign: "center" }}>
               {errors.server}
@@ -120,29 +131,15 @@ const Login = () => {
         <div className="auth-divider">OR</div>
 
         <div className="social-buttons-container">
-          <button
-            type="button"
-            className="social-btn"
-            onClick={() => handleSocialLogin("Google")}
-          >
+          <button type="button" className="social-btn" onClick={() => handleSocialLogin("Google")}>
             <FcGoogle />
             <span>Login with Google</span>
           </button>
-          
-          <button
-            type="button"
-            className="social-btn"
-            onClick={() => handleSocialLogin("Microsoft")}
-          >
+          <button type="button" className="social-btn" onClick={() => handleSocialLogin("Microsoft")}>
             <FaMicrosoft color="#00a4ef" />
             <span>Login with Microsoft</span>
           </button>
-
-          <button
-            type="button"
-            className="social-btn"
-            onClick={() => handleSocialLogin("Email")}
-          >
+          <button type="button" className="social-btn" onClick={() => handleSocialLogin("Email")}>
             <FaEnvelope color="#ea4335" />
             <span>Login with Email</span>
           </button>
